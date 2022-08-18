@@ -1,7 +1,9 @@
 import Ticket from "../../Models/Ticket.js";
 
 export async function getAllTickets(req, res) {
-    
+    const tickets = Ticket.find();
+    console.log(tickets);
+    res.send(tickets);
 }
 
 export async function addTicket() {
