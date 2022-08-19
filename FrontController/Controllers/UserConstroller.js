@@ -1,4 +1,5 @@
 import User from "../../Models/User.js";
+import bcrypt from "bcrypt";
 
 export async function getAllUsers(req, res) {
     const users = await User.find();
@@ -6,6 +7,13 @@ export async function getAllUsers(req, res) {
 }
 
 export async function addUser(req, res) {
+    try {
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        req.body.password = hashedPassword;
+    } catch (error) {
+        console.log(error);
+        res.send("Error saving password.");
+    }
     const user = new User(req.body);
     user.save()
         .then(() => (res.send("User Saved on Database.")))
@@ -34,4 +42,23 @@ export async function deleteUser(req, res) {
         $or:[{employeeID: req.params.id},{_ID: req.params.id}]
     });
     res.send(result);
+}
+
+export async function userLogin(req, res) {
+    const user = await User.findOne({
+        $or:[{employeeID: req.params.id},{_ID: req.params.id}]
+    });
+    if(user === null) {
+        return res.send("User not found.");
+    }
+    try {
+        const isMatch = await bcrypt.compare(req.body.password, user.password);
+        if(isMatch) {
+            return res.send("Password is correct.");
+        }
+        return res.send("Password incorrect.");
+    } catch (error) {
+        console.log(error);
+        res.send("Error checking password.");
+    }
 }

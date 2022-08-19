@@ -1,0 +1,15 @@
+//To use this you must have the extension "REST Client" on VSCODE
+
+GET http://localhost:3000
+
+###
+
+POST http://localhost:3000/user
+Content-Type: application/json
+
+{
+    "name":"Markin007",
+    "phone":"007",
+    "employeeID":"001",
+    "email":"markin@gmail.com"
+}

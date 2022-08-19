@@ -3,7 +3,7 @@ export { addTicket, getTicket, updateTicket, deleteTicket, getAllTickets }
 from "./Controllers/TicketController.js";
 
 //Methods for User
-export { addUser, getUser, updateUser, deleteUser, getAllUsers } 
+export { addUser, getUser, updateUser, deleteUser, getAllUsers, userLogin } 
 from "./Controllers/UserConstroller.js";
 
 //Methods for Department
