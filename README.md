@@ -21,5 +21,6 @@ npm install
 ```
 4. Use o seguinte comando para rodar a aplicação: 
 ```
-npm start
+npm start //Produção
+npm run devStart //Dev
 ```

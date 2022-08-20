@@ -1,5 +1,6 @@
 import Express from "express";
-import * as FrontController from "../FrontController/FrontController.js";
+import * as FrontController from "../Controllers/FrontController.js";
+import { validateToken } from "../utils/jwt.js";
 const router = Express.Router();
 
 //Generic greeting.
@@ -24,13 +25,13 @@ router.get("/user/:id", (req, res) => FrontController.getUser(req, res));
 router.get("/department/:id", (req, res) => FrontController.getDepartment(req, res));
 
 //Routes to update an instance of any entity.
-router.put("/ticket/:id", (req, res) => FrontController.updateTicket(req, res));
-router.put("/user/:id", (req, res) => FrontController.updateUser(req, res));
-router.put("/department/:id", (req, res) => FrontController.updateDepartment(req, res));
+router.put("/ticket/:id", validateToken, (req, res) => FrontController.updateTicket(req, res));
+router.put("/user/:id", validateToken, (req, res) => FrontController.updateUser(req, res));
+router.put("/department/:id", validateToken, (req, res) => FrontController.updateDepartment(req, res));
 
 //Routes to delete instances of any entity.
-router.delete("/ticket/:id", (req, res) => FrontController.deleteTicket(req, res));
-router.delete("/user/:id", (req, res) => FrontController.deleteUser(req, res));
-router.delete("/department/:id", (req, res) => FrontController.deleteDepartment(req, res));
+router.delete("/ticket/:id", validateToken, (req, res) => FrontController.deleteTicket(req, res));
+router.delete("/user/:id", validateToken, (req, res) => FrontController.deleteUser(req, res));
+router.delete("/department/:id", validateToken, (req, res) => FrontController.deleteDepartment(req, res));
 
 export default router;

@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "devStart": "nodemon index.js",
+    "devAuth": "nodemon authServer.js",
     "start": "node index.js"
   },
   "type": "module",

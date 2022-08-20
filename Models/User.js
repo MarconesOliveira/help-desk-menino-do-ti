@@ -2,10 +2,10 @@ import mongoose from "../Databases/mongodb.js";
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
-    employeeID: String,
+    employeeID: { type:String, unique:true },
     name: String,
     phone: String,
-    email: String,
+    email: { type:String, unique:true },
     password: String,
 });
 

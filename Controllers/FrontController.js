@@ -1,11 +1,11 @@
 //Methods for Ticket
 export { addTicket, getTicket, updateTicket, deleteTicket, getAllTickets } 
-from "./Controllers/TicketController.js";
+from "./Ticket/TicketController.js";
 
 //Methods for User
 export { addUser, getUser, updateUser, deleteUser, getAllUsers, userLogin } 
-from "./Controllers/UserConstroller.js";
+from "./User/UserController.js";
 
 //Methods for Department
 export { addDepartment, getDepartment, updateDepartment, deleteDepartment, getAllDepartments } 
-from "./Controllers/DepartmentController.js";
+from "./Department/DepartmentController.js";
