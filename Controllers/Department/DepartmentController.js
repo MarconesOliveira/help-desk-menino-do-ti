@@ -1,37 +1,36 @@
 import Department from "../../Models/Department.js";
 
 export async function getAllDepartments(req, res) {
-    const departments = await Department.find();
-    res.send(departments);
+    const departments = await Department.find({}, "name code");
+    res.json({"msg":departments});
 }
 
 export async function addDepartment(req, res) {
     const department = new Department(req.body);
     department.save()
-        .then(() => (res.send("Department Saved on Database.")))
-        .catch((error) => (console.log(error)));
+        .then(() => (res.json({"msg":"Department Saved on Database."})))
+        .catch((error) => {
+            console.log(error);
+            res.json({"msg":"Failed to save on database."});
+        });
 }
 
 export async function getDepartment(req, res) {
-    const department = await Department.findOne({
-        $or:[{name: req.params.id},{_ID: req.params.id}]
-    });
-    res.send(department);
+    const department = await Department.findOne({code: req.params.code}, "name supervisor email");
+    res.json({"msg":department});
 }
 
 export async function updateDepartment(req, res) {
     const update = req.body;
     const result = await Department.updateOne({
-        $or:[{name: req.params.id},{_ID: req.params.id}]
+        code: req.params.code
     },{
         ...update
     });
-    res.send(result);
+    res.json({"msg":result});
 }
 
 export async function deleteDepartment(req, res) {
-    const result = await Department.deleteOne({
-        $or:[{name: req.params.id},{_ID: req.params.id}]
-    });
-    res.send(result);
+    const result = await Department.deleteOne({code: req.params.code});
+    res.json({"msg":result});
 }

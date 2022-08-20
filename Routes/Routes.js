@@ -20,18 +20,18 @@ router.post("/user", (req, res) => FrontController.addUser(req, res));
 router.post("/department", (req, res) => FrontController.addDepartment(req, res));
 
 //Routes to get a specific instance of an entity.
-router.get("/ticket/:id", (req, res) => FrontController.getTicket(req, res));
+router.get("/ticket/:code", (req, res) => FrontController.getTicket(req, res));
 router.get("/user/:employeeID", (req, res) => FrontController.getUser(req, res));
-router.get("/department/:id", (req, res) => FrontController.getDepartment(req, res));
+router.get("/department/:code", (req, res) => FrontController.getDepartment(req, res));
 
 //Routes to update an instance of any entity.
-router.put("/ticket/:id", validateToken, (req, res) => FrontController.updateTicket(req, res));
-router.put("/user/:id", validateToken, (req, res) => FrontController.updateUser(req, res));
-router.put("/department/:id", validateToken, (req, res) => FrontController.updateDepartment(req, res));
+router.put("/ticket/:code", validateToken, (req, res) => FrontController.updateTicket(req, res));
+router.put("/user", validateToken, (req, res) => FrontController.updateUser(req, res));
+router.put("/department/:code", validateToken, (req, res) => FrontController.updateDepartment(req, res));
 
 //Routes to delete instances of any entity.
-router.delete("/ticket", validateToken, (req, res) => FrontController.deleteTicket(req, res));
+router.delete("/ticket/code", validateToken, (req, res) => FrontController.deleteTicket(req, res));
 router.delete("/user", validateToken, (req, res) => FrontController.deleteUser(req, res));
-router.delete("/department", validateToken, (req, res) => FrontController.deleteDepartment(req, res));
+router.delete("/department/:code", validateToken, (req, res) => FrontController.deleteDepartment(req, res));
 
 export default router;

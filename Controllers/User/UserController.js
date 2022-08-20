@@ -41,8 +41,7 @@ export async function updateUser(req, res) {
 }
 
 export async function deleteUser(req, res) {
-    const user = req.user;
-    const result = await User.deleteOne({employeeID: user.employeeID});
+    const result = await User.deleteOne({employeeID: req.user.employeeID});
     res.json({"msg":result});
 }
 
