@@ -30,7 +30,7 @@ router.put("/user", validateToken, (req, res) => FrontController.updateUser(req,
 router.put("/department/:code", validateToken, (req, res) => FrontController.updateDepartment(req, res));
 
 //Routes to delete instances of any entity.
-router.delete("/ticket/code", validateToken, (req, res) => FrontController.deleteTicket(req, res));
+router.delete("/ticket/:code", validateToken, (req, res) => FrontController.deleteTicket(req, res));
 router.delete("/user", validateToken, (req, res) => FrontController.deleteUser(req, res));
 router.delete("/department/:code", validateToken, (req, res) => FrontController.deleteDepartment(req, res));
 

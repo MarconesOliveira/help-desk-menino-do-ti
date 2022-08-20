@@ -6,6 +6,7 @@ const ticketSchema = new Schema({
     department: String,
     requester: String,
     state: String,
+    code: { type:String, unique:true }
 });
 
 const Ticket = mongoose.model("Ticket", ticketSchema);
