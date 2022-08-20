@@ -10,6 +10,7 @@ Siga os seguintes passos para rodar a aplicação:
 2. Criar na pasta raiz um arquivo .env como o seguinte: 
 ```
 API_PORT=3000
+JWT_SECRET=menino_do_ti
 
 MONGO_HOST=localhost
 MONGO_PORT=27017
