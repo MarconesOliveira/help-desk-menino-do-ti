@@ -16,6 +16,7 @@ MONGO_HOST=localhost
 MONGO_PORT=27017
 MONGO_DB_NAME=menino_do_ti
 ```
+> Use o gerador de caracteres na pasta ***utils*** para gerar uma chave segura para ser o ***JWT_SECRET***.
 3. Use o seguinte comando para instalar as dependências: 
 ```
 npm install

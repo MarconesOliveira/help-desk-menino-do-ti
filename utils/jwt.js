@@ -4,7 +4,7 @@ dotenv.config();
 
 export function createToken(user) {
     const secret = process.env.JWT_SECRET;
-    const userObject = {...user._doc};
+    const userObject = {...user};
     const token = jsonwebtoken.sign(userObject, secret);
     return token;
 }
@@ -16,6 +16,7 @@ export function validateToken(req, res, next) {
     if(token === null || token === undefined) {
         return res.status(401).json({"msg":"No token."});
     }
+
     const secret = process.env.JWT_SECRET;
     jsonwebtoken.verify(token, secret, (error, user) => {
         if(error) {

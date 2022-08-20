@@ -25,14 +25,15 @@ export async function addUser(req, res) {
 }
 
 export async function getUser(req, res) {
-    const user = await User.findOne({employeeID: req.params.id}, "name email phone");
+    const user = await User.findOne({employeeID: req.params.employeeID}, "name email");
     res.json({"msg":user});
 }
 
 export async function updateUser(req, res) {
     const update = req.body;
+    const user = req.user;
     const result = await User.updateOne({
-        employeeID: req.params.id
+        employeeID: user.employeeID
     },{
         ...update
     });
@@ -40,7 +41,8 @@ export async function updateUser(req, res) {
 }
 
 export async function deleteUser(req, res) {
-    const result = await User.deleteOne({employeeID: req.params.id});
+    const user = req.user;
+    const result = await User.deleteOne({employeeID: user.employeeID});
     res.json({"msg":result});
 }
 
@@ -52,7 +54,11 @@ export async function userLogin(req, res) {
     try {
         const isMatch = await bcrypt.compare(req.body.password, user.password);
         if(isMatch) {
-            const token = createToken(user);
+            const token = createToken({
+                "_id":user._id,
+                "employeeID":user.employeeID,
+                "email":user.email
+            });
             return res.json({"msg":{"jwtToken":token}});
         }
         return res.json({"msg":"Password incorrect."});
