@@ -26,3 +26,11 @@ npm install
 npm start //Produção
 npm run devStart //Dev
 ```
+## Deploy
+Foi feito o Deploy do backend da aplicação no Heroku, no seguinte link:
+
+https://menino-do-ti.herokuapp.com/
+
+Para acessar a documentação interativa entre no link:
+
+https://menino-do-ti.herokuapp.com/docs/
