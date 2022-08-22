@@ -23,6 +23,6 @@ app.use((req, res) => {
 });
 
 //Call an environment variable
-const port = process.env.API_PORT;
+const port = process.env.PORT || 3000;
 //Turn on the app
 app.listen(port, () => (console.log("App running at port " + port)));
