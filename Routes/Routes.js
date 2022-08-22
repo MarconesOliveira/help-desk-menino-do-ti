@@ -1,13 +1,23 @@
 import Express from "express";
+import path from "path";
+import { fileURLToPath } from 'url';
 import * as FrontController from "../Controllers/FrontController.js";
 import { validateToken } from "../utils/jwt.js";
 const router = Express.Router();
 
-//Generic greeting.
-router.get("/", (req, res) => (res.send("Olá, bem vindo ao Menino_do_TI!")));
+//Path resolving
+let __dirname = path.dirname(fileURLToPath(import.meta.url));
+__dirname = path.normalize(`${__dirname}\\..\\`)
 
-//Login route
+//Generic greeting.
+router.get("/", (req, res) => (res.status(200).sendFile(__dirname + "Views/home.html")));
+
+//Register
+router.get("/register", (req, res) => (res.status(200).sendFile(__dirname + "Views/register.html")));
+
+//Login routes
 router.post("/login", (req, res) => FrontController.userLogin(req, res));
+router.get("/login", (req, res) => (res.status(200).sendFile(__dirname + "Views/login.html")));
 
 //Routes to get all instances of any entity.
 router.get("/all_tickets", (req, res) => FrontController.getAllTickets(req, res));

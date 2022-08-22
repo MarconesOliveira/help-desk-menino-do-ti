@@ -13,6 +13,8 @@ const app = Express();
 app.use(Express.urlencoded({ extended: false }));
 //Read JSON body
 app.use(Express.json());
+//Static files
+app.use(Express.static("Public"));
 //User the local router
 app.use(router);
 //SwaggerUI for documentation

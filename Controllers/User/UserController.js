@@ -56,7 +56,8 @@ export async function userLogin(req, res) {
             const token = createToken({
                 "_id":user._id,
                 "employeeID":user.employeeID,
-                "email":user.email
+                "email":user.email,
+                "name": user.name
             });
             return res.json({"msg":{"jwtToken":token}});
         }
