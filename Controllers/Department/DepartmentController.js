@@ -1,7 +1,7 @@
 import Department from "../../Models/Department.js";
 
 export async function getAllDepartments(req, res) {
-    const departments = await Department.find({}, "name code");
+    const departments = await Department.find({}, "-_id -__v");
     res.json({"msg":departments});
 }
 
@@ -16,7 +16,7 @@ export async function addDepartment(req, res) {
 }
 
 export async function getDepartment(req, res) {
-    const department = await Department.findOne({code: req.params.code}, "name supervisor email");
+    const department = await Department.findOne({code: req.params.code}, "-_id -__v");
     res.json({"msg":department});
 }
 

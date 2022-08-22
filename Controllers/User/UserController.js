@@ -3,8 +3,8 @@ import bcrypt from "bcrypt";
 import { createToken } from "../../utils/jwt.js";
 
 export async function getAllUsers(req, res) {
-    const users = await User.find({},"name employeeID");
-    res.json({"msg":users});
+    const users = await User.find({}, "-_id -__v");
+    res.status(200).json({"msg":users});
 }
 
 export async function addUser(req, res) {
@@ -17,15 +17,15 @@ export async function addUser(req, res) {
     }
     const user = new User(req.body);
     user.save()
-        .then(() => (res.json({"msg":"User Saved on Database."})))
+        .then(() => (res.status(200).json({"msg":"User Saved on Database."})))
         .catch((error) => {
             console.log(error.code);
-            res.json({"msg":"Failed to save on database."});
+            res.status(400).json({"msg":"Failed to save on database."});
         });
 }
 
 export async function getUser(req, res) {
-    const user = await User.findOne({employeeID: req.params.employeeID}, "name email");
+    const user = await User.findOne({employeeID: req.params.employeeID}, "-_id -__v");
     res.json({"msg":user});
 }
 
@@ -48,7 +48,7 @@ export async function deleteUser(req, res) {
 export async function userLogin(req, res) {
     const user = await User.findOne({employeeID: req.body.employeeID});
     if(user === null) {
-        return res.json({"msg":"User not found."});
+        return res.status(400).json({"msg":"User not found."});
     }
     try {
         const isMatch = await bcrypt.compare(req.body.password, user.password);
@@ -60,7 +60,7 @@ export async function userLogin(req, res) {
             });
             return res.json({"msg":{"jwtToken":token}});
         }
-        return res.json({"msg":"Password incorrect."});
+        return res.status(400).json({"msg":"Password incorrect."});
     } catch (error) {
         console.log(error);
         res.json({"msg":"Error checking password."});
