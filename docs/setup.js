@@ -19,7 +19,7 @@ const swaggerSetup = {
             "description": "Dev Server"
         },
         {
-            "url": "http://localhost:3001",
+            "url": "https://menino-do-ti.herokuapp.com/",
             "description": "Production Server"
         }
     ]    
