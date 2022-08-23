@@ -7,13 +7,16 @@ const router = Express.Router();
 
 //Path resolving
 let __dirname = path.dirname(fileURLToPath(import.meta.url));
-__dirname = path.normalize(`${__dirname}/../`)
+__dirname = path.normalize(`${__dirname}/../`);
 
 //Generic greeting.
 router.get("/", (req, res) => (res.status(200).sendFile(path.join(__dirname + "Views/home.html"))));
 
-//Register
+//Routes that return Views
 router.get("/register", (req, res) => (res.status(200).sendFile(path.join(__dirname + "Views/register.html"))));
+router.get("/users", (req, res) => (res.status(200).sendFile(path.join(__dirname + "Views/users.html"))));
+router.get("/departments", (req, res) => (res.status(200).sendFile(path.join(__dirname + "Views/departments.html"))));
+router.get("/ticket", (req, res) => (res.status(200).sendFile(path.join(__dirname + "Views/ticket.html"))));
 
 //Login routes
 router.post("/login", (req, res) => FrontController.userLogin(req, res));
@@ -25,7 +28,7 @@ router.get("/all_users", (req, res) => FrontController.getAllUsers(req, res));
 router.get("/all_departments", (req, res) => FrontController.getAllDepartments(req, res));
 
 //Routes to create new instances of an entity.
-router.post("/ticket", (req, res) => FrontController.addTicket(req, res));
+router.post("/ticket", validateToken, (req, res) => FrontController.addTicket(req, res));
 router.post("/user", (req, res) => FrontController.addUser(req, res));
 router.post("/department", (req, res) => FrontController.addDepartment(req, res));
 

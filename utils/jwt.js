@@ -5,7 +5,7 @@ dotenv.config();
 export function createToken(user) {
     const secret = process.env.JWT_SECRET;
     const userObject = {...user};
-    const token = jsonwebtoken.sign(userObject, secret);
+    const token = jsonwebtoken.sign(userObject, secret, { expiresIn: "10m" });
     return token;
 }
 

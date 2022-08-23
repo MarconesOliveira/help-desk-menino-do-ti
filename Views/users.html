@@ -34,18 +34,8 @@
                 </div>
             </header>
             <div class="container row my-5">
-                <div class="col-md-6 col-lg-4">
-                    <h4 class="mb-3">Tickets Abertos</h4>
-                    <div id="tickets_abertos"></div>
-                </div>
-                <div class="col-md-6 col-lg-4">
-                    <h4 class="mb-3">Tickets Em Manutenção</h4>
-                    <div id="tickets_manutencao"></div>
-                </div>
-                <div class="col-md-6 col-lg-4">
-                    <h4 class="mb-3">Tickets Fechados</h4>
-                    <div id="tickets_fechados"></div>
-                </div>
+                <h4>All Users Registered</h4>
+                <div id="users" class="row"></div>
             </div>
         </main>
         <footer>
@@ -75,32 +65,29 @@
         </footer>
     </div>
     <script>
-        axios.get("/all_tickets")
+        axios.get("/all_users")
             .then(res => {
-                const tickets = res.data.msg;
-                tickets.forEach(ticket => {
+                const users = res.data.msg;
+                console.log(users);
+                users.forEach(user => {
                     const card = `
-                        <a href="/login">
-                            <div class="card my-2 p-2 ${ticket.state}">
-                                <div class="card-body">
-                                    <div class="card-title fw-bolder">
-                                        ${ticket.department}
-                                    </div>
-                                    <div class="card-text">
-                                        ${ticket.description}
+                        <div class="col-sm-6 col-lg-4">
+                            <a href="/login">
+                                <div class="card my-2 p-2 shadow-lg">
+                                    <div class="card-body">
+                                        <div class="card-title display-5">
+                                            ${user.name}
+                                        </div>
+                                        <div class="card-text">
+                                            <p class="lead p-0 m-0">EmployeeID: ${user.employeeID}</p>
+                                            <p class="lead p-0 m-0">Email: ${user.email}</p>
+                                            <p class="lead p-0 m-0">Phone: ${user.phone}</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </a>`;
-                    if(ticket.state === "Aberto") {
-                        document.querySelector("#tickets_abertos").innerHTML += card;
-                    }
-                    else if(ticket.state === "Manutencao") {
-                        document.querySelector("#tickets_manutencao").innerHTML += card;
-                    }
-                    else if(ticket.state === "Fechado") {
-                        document.querySelector("#tickets_fechados").innerHTML += card;
-                    }
+                            </a>
+                        </div>`;
+                    document.querySelector("#users").innerHTML += card;
                 });
             }).catch((err) => {
                 console.log(err.response.data.msg);
@@ -112,7 +99,6 @@
             var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
                 return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
             }).join(''));
-
             return JSON.parse(jsonPayload);
         }
         const getToken = () => {

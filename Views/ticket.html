@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100 p-0 m-0">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        a{text-decoration: none; color: initial;transition: 0.5s;}
+        a:hover{color: darkgray;}
+        html{min-width: 400px;}
+        .Aberto{box-shadow: 0px 0px 30px red;}
+        .Manutencao{box-shadow: 0px 0px 30px orange;}
+        .Fechado{box-shadow: 0px 0px 30px green;}
+    </style>
+    <title>Menino_do_TI</title>
+</head>
+<body class="h-100 p-0 m-0 min-vw-100">
+    <div class="container p-1 mx-auto text-center h-100 d-flex flex-column justify-content-between">
+        <main>
+            <header>
+                <div class="container row align-items-center justify-content-around">
+                    <h1 class="display-5 col-md-8">Menino_do_TI</h1>
+                    <div class="col-md-4 d-flex flex-row gap-3 justify-content-center " id="login">
+                        <a href="/">
+                            <button class="btn btn-outline-primary">Home</button>
+                        </a>
+                    </div>
+                </div>
+            </header>
+            <div class="col-sm-8 col-md-6 col-lg-4 mx-auto text-start my-3">
+                <form class="p-4 p-md-5 border bg-light rounded">
+                    <div class="mb-3">
+                        <input type="text" class="form-control form-control-lg" id="description" name="description" placeholder="description"
+                        required>
+                        <label for="description" class="text-muted m-1">Description of the issue. Ex.: O wifi caiu.</label>
+                    </div>
+                    <div class="mb-3">
+                        <input type="text" class="form-control form-control-lg" id="department" name="department" placeholder="department"
+                            required>
+                        <label for="department" class="text-muted m-1">Origin department. Ex.: Jornalismo</label>
+                    </div>
+                    <div class="mb-3">
+                        <input type="text" class="form-control form-control-lg" id="requester" name="requester" placeholder="requester"
+                            required>
+                        <label for="requester" class="text-muted m-1">Whos requesting. Ex.: Peter Parker</label>
+                    </div>
+                    <div class="mb-3">
+                        <input type="text" class="form-control form-control-lg" value="Aberto" id="state" name="state" placeholder="state"
+                            readonly>
+                        <label for="state" class="text-muted m-1">Initial State. Ex.: Aberto</label>
+                    </div>
+                    <div class="mb-3">
+                        <input type="number" class="form-control form-control-lg" id="code" name="code"
+                            placeholder="code" required>
+                        <label for="code" class="text-muted m-1">Ticket code. Ex.: 001</label>
+                    </div>
+                    <button class="w-100 btn btn-lg btn-primary mt-3">Create new Ticket</button>
+                </form>
+            </div>
+        </main>
+        <footer>
+            <div class="row border-top border-dark p-2">
+                <div class="col-sm-4">
+                    <a href="/users">
+                        <button type="button" class="btn btn-outline-secondary">
+                            All Users
+                        </button>
+                    </a>
+                </div>
+                <div class="col-sm-4">
+                    <a href="/departments">
+                        <button type="button" class="btn btn-outline-secondary">
+                            All Departments
+                        </button>
+                    </a>
+                </div>
+                <div class="col-sm-4">
+                    <a href="/ticket">
+                        <button type="button" class="btn btn-outline-secondary">
+                            New Ticket
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script>
+        const getToken = () => {
+            return localStorage.getItem("token_menino_do_ti");
+        }
+        if(getToken() === null) {
+            window.location.href = "/";
+        }
+        const form = document.querySelector('form');
+        if (form) {
+            form.addEventListener('submit', (evt) => {
+                evt.preventDefault();
+                evt.stopPropagation();
+                createTicket();
+            });
+        }
+        const createTicket = async () => {
+
+            const formData = new FormData(form);
+            const formDataJSON = Object.fromEntries(formData.entries());
+
+            const request = {
+                method: "POST",
+                url: "/ticket",
+                data: JSON.stringify(formDataJSON),
+                headers: {
+                    Authorization: `Bearer ${getToken()}`,
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            };
+            console.log(request);
+            axios(request).then(res => {
+                console.log(res.data);
+                window.location.href = "/";
+            }).catch((err) => {
+                console.log(err.response.data.msg);
+            });
+
+        }
+    </script>
+</body>
+</html>

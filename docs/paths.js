@@ -316,6 +316,7 @@ const swaggerPaths = {
     },
     "/ticket": {
         "post": {
+            "security": [{ "bearerAuth": [ ] }],
             "tags": ["Ticket"],
             "summary": "Create new Ticket",
             "description": "Create a new Ticket on database. No token required. 'code' is unique.",
