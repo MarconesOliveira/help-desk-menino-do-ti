@@ -7,7 +7,7 @@ const router = Express.Router();
 
 //Path resolving
 let __dirname = path.dirname(fileURLToPath(import.meta.url));
-__dirname = path.normalize(`${__dirname}\\..\\`)
+__dirname = path.normalize(`${__dirname}/../`)
 
 //Generic greeting.
 router.get("/", (req, res) => (res.status(200).sendFile(path.join(__dirname + "Views/home.html"))));
