@@ -10,7 +10,7 @@ let __dirname = path.dirname(fileURLToPath(import.meta.url));
 __dirname = path.normalize(`${__dirname}\\..\\`)
 
 //Generic greeting.
-router.get("/", (req, res) => (res.status(200).sendFile(__dirname + "Views/home.html")));
+router.get("/", (req, res) => (res.status(200).sendFile(path.join(__dirname + "Views/home.html"))));
 
 //Register
 router.get("/register", (req, res) => (res.status(200).sendFile(__dirname + "Views/register.html")));
