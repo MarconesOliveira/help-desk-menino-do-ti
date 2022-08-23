@@ -13,11 +13,11 @@ __dirname = path.normalize(`${__dirname}/../`)
 router.get("/", (req, res) => (res.status(200).sendFile(path.join(__dirname + "Views/home.html"))));
 
 //Register
-router.get("/register", (req, res) => (res.status(200).sendFile(__dirname + "Views/register.html")));
+router.get("/register", (req, res) => (res.status(200).sendFile(path.join(__dirname + "Views/register.html"))));
 
 //Login routes
 router.post("/login", (req, res) => FrontController.userLogin(req, res));
-router.get("/login", (req, res) => (res.status(200).sendFile(__dirname + "Views/login.html")));
+router.get("/login", (req, res) => (res.status(200).sendFile(path.join(__dirname + "Views/login.html"))));
 
 //Routes to get all instances of any entity.
 router.get("/all_tickets", (req, res) => FrontController.getAllTickets(req, res));
