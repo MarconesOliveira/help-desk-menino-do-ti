@@ -23,7 +23,7 @@
             <header>
                 <div class="container row align-items-center justify-content-around">
                     <h1 class="display-5 col-md-8">Menino_do_TI</h1>
-                    <div class="col-md-4 d-flex flex-row gap-3 justify-content-center " id="login">
+                    <div class="col-md-4 d-flex flex-row gap-3 justify-content-center align-items-center" id="login">
                         <a href="/login">
                             <button class="btn btn-outline-primary">Login</button>
                         </a>
@@ -35,19 +35,36 @@
             </header>
             <div class="container row my-5">
                 <div class="col-md-6 col-lg-4">
-                    <h4 class="mb-3">Tickets Abertos</h4>
+                    <h4 class="my-3">Tickets Abertos</h4>
                     <div id="tickets_abertos"></div>
                 </div>
                 <div class="col-md-6 col-lg-4">
-                    <h4 class="mb-3">Tickets Em Manutenção</h4>
+                    <h4 class="my-3">Tickets Em Manutenção</h4>
                     <div id="tickets_manutencao"></div>
                 </div>
                 <div class="col-md-6 col-lg-4">
-                    <h4 class="mb-3">Tickets Fechados</h4>
+                    <h4 class="my-3">Tickets Fechados</h4>
                     <div id="tickets_fechados"></div>
                 </div>
             </div>
         </main>
+  
+        <div class="modal fade" id="TicketModal" tabindex="-1" aria-labelledby="TicketModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="TicketModalLabel"></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="modal-body"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="update-ticket" onclick="updateTicket()" disabled>Update</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <footer>
             <div class="row border-top border-dark p-2">
                 <div class="col-sm-4">
@@ -75,37 +92,6 @@
         </footer>
     </div>
     <script>
-        axios.get("/all_tickets")
-            .then(res => {
-                const tickets = res.data.msg;
-                tickets.forEach(ticket => {
-                    const card = `
-                        <a href="/login">
-                            <div class="card my-2 p-2 ${ticket.state}">
-                                <div class="card-body">
-                                    <div class="card-title fw-bolder">
-                                        ${ticket.department}
-                                    </div>
-                                    <div class="card-text">
-                                        ${ticket.description}
-                                    </div>
-                                </div>
-                            </div>
-                        </a>`;
-                    if(ticket.state === "Aberto") {
-                        document.querySelector("#tickets_abertos").innerHTML += card;
-                    }
-                    else if(ticket.state === "Manutencao") {
-                        document.querySelector("#tickets_manutencao").innerHTML += card;
-                    }
-                    else if(ticket.state === "Fechado") {
-                        document.querySelector("#tickets_fechados").innerHTML += card;
-                    }
-                });
-            }).catch((err) => {
-                console.log(err.response.data.msg);
-            });
-
         const parseJwt = (token) => {
             var base64Url = token.split('.')[1];
             var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -125,12 +111,114 @@
         if(getToken() != null) {
             const userName = parseJwt(localStorage.getItem("token_menino_do_ti")).name;
             document.querySelector("#login").innerHTML = `
-                <span onclick="deleteToken()" class="d-flex flex-row">
-                    <h5 class="lead my-2 mx-3">Olá, ${userName}</h5>
-                    <button class="btn btn-outline-danger">Logout</button>
-                </span>
+                <h5 class="lead my-2 mx-3">Olá, ${userName}</h5>
+                <a>
+                    <button class="btn btn-outline-danger" onclick="deleteToken()">Logout</button>
+                </a>
             `;
         }
+        axios.get("/all_tickets")
+            .then(res => {
+                const tickets = res.data.msg;
+                tickets.forEach(ticket => {
+                    const card = `
+                        <span data-bs-toggle="modal" data-bs-target="#TicketModal" id="${ticket.code}" onclick="updateModal(this.id)">
+                            <div class="card my-2 p-2 ${ticket.state}">
+                                <div class="card-body">
+                                    <div class="card-title fw-bolder">
+                                        ${ticket.department}
+                                    </div>
+                                    <div class="card-text">
+                                        ${ticket.description}
+                                    </div>
+                                </div>
+                            </div>
+                        </span>`;
+                    if(ticket.state === "Aberto") {
+                        document.querySelector("#tickets_abertos").innerHTML += card;
+                    }
+                    else if(ticket.state === "Manutencao") {
+                        document.querySelector("#tickets_manutencao").innerHTML += card;
+                    }
+                    else if(ticket.state === "Fechado") {
+                        document.querySelector("#tickets_fechados").innerHTML += card;
+                    }
+                });
+            }).catch((err) => {
+                console.log(err.response.data.msg);
+            });
+        const updateModal = (ticketId) => {
+            axios.get(`/ticket/${ticketId}`)
+                .then(res => {
+                    const ticket = res.data.msg;
+                    if(getToken() === null) {
+                        document.querySelector("#TicketModalLabel").innerHTML = `Ticket: ${ticket.code}`;
+                        document.querySelector("#modal-body").innerHTML = `
+                            <p>Department: ${ticket.department}</p>
+                            <p>Description: ${ticket.description}</p>
+                            <p>Requester: ${ticket.requester}</p>
+                            <p>State: ${ticket.state}</p>
+                        `;
+                    } else {
+                        document.querySelector("#TicketModalLabel").innerHTML = `Update the Ticket`;
+                        document.querySelector("#update-ticket").disabled = false;
+                        document.querySelector("#modal-body").innerHTML = `
+                        <div class="col-sm-10 col-md-8 col-lg-6 mx-auto text-start">
+                            <form class="p-4 p-md-5 border bg-light rounded">
+                                <div class="mb-3">
+                                    <input type="text" class="form-control form-control-lg" id="code" name="code"
+                                        placeholder="code" readonly value="${ticket.code}">
+                                    <label for="code" class="text-muted m-1">Ticket code.</label>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="text" class="form-control form-control-lg" id="department" name="department" placeholder="department"
+                                        required value="${ticket.department}">
+                                    <label for="department" class="text-muted m-1">Edit department.</label>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="text" class="form-control form-control-lg" id="description" name="description"
+                                        placeholder="description" required value="${ticket.description}">
+                                    <label for="description" class="text-muted m-1">Edit description.</label>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="text" class="form-control form-control-lg" id="requester" name="requester"
+                                        placeholder="requester" readonly value="${ticket.requester}">
+                                    <label for="requester" class="text-muted m-1">Requester.</label>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="text" class="form-control form-control-lg" id="state" name="state"
+                                        placeholder="state" required value="${ticket.state}">
+                                    <label for="state" class="text-muted m-1">Edit state.</label>
+                                </div>
+                            </form>
+                        </div>
+                        `;
+                    }
+                }).catch((err) => {
+                    console.log(err.response.data.msg);
+                });
+        }
+        const updateTicket = async () => {
+            const form = document.querySelector("form");
+            const formData = new FormData(form);
+            const formDataJSON = Object.fromEntries(formData.entries());
+            console.log(formDataJSON);
+
+            axios({
+                method: "PUT",
+                url: `/ticket/${formDataJSON.code}`,
+                data: JSON.stringify(formDataJSON),
+                headers: {
+                    Authorization: `Bearer ${getToken()}`,
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            }).then(res => {
+                window.location.href = "/";
+            }).catch((err) => {
+                console.log(err.response.data.msg);
+            });
+        }
+        
     </script>
 </body>
 </html>

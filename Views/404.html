@@ -59,37 +59,6 @@
         </footer>
     </div>
     <script>
-        axios.get("/all_tickets")
-            .then(res => {
-                const tickets = res.data.msg;
-                tickets.forEach(ticket => {
-                    const card = `
-                        <a href="/login">
-                            <div class="card my-2 p-2 ${ticket.state}">
-                                <div class="card-body">
-                                    <div class="card-title fw-bolder">
-                                        ${ticket.department}
-                                    </div>
-                                    <div class="card-text">
-                                        ${ticket.description}
-                                    </div>
-                                </div>
-                            </div>
-                        </a>`;
-                    if(ticket.state === "Aberto") {
-                        document.querySelector("#tickets_abertos").innerHTML += card;
-                    }
-                    else if(ticket.state === "Manutencao") {
-                        document.querySelector("#tickets_manutencao").innerHTML += card;
-                    }
-                    else if(ticket.state === "Fechado") {
-                        document.querySelector("#tickets_fechados").innerHTML += card;
-                    }
-                });
-            }).catch((err) => {
-                console.log(err.response.data.msg);
-            });
-
         const parseJwt = (token) => {
             var base64Url = token.split('.')[1];
             var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');

@@ -23,12 +23,15 @@
             <header>
                 <div class="container row align-items-center justify-content-around">
                     <h1 class="display-5 col-md-8">Menino_do_TI</h1>
-                    <div class="col-md-4 d-flex flex-row gap-3 justify-content-center " id="login">
+                    <div class="col-md-4 d-flex flex-row gap-3 justify-content-center align-items-center" id="login">
                         <a href="/login">
                             <button class="btn btn-outline-primary">Login</button>
                         </a>
                         <a href="/register">
                             <button class="btn btn-outline-primary">Register</button>
+                        </a>
+                        <a href="/">
+                            <button class="btn btn-outline-primary">Home</button>
                         </a>
                     </div>
                 </div>
@@ -112,10 +115,13 @@
             const userName = parseJwt(localStorage.getItem("token_menino_do_ti")).name;
             console.log(userName);
             document.querySelector("#login").innerHTML = `
-                <span onclick="deleteToken()" class="d-flex flex-row">
-                    <h5 class="lead my-2 mx-3">Olá, ${userName}</h5>
-                    <button class="btn btn-outline-danger">Logout</button>
-                </span>
+                <h5 class="lead my-2 mx-3">Olá, ${userName}</h5>
+                <a>
+                    <button class="btn btn-outline-danger" onclick="deleteToken()">Logout</button>
+                </a>
+                <a href="/">
+                    <button class="btn btn-outline-primary">Home</button>
+                </a>
             `;
         }
     </script>
