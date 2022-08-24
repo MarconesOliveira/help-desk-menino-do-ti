@@ -50,6 +50,7 @@
                     </div>
                     <div class="modal-body" id="modal-body">
                         <div class="col-10 mx-auto text-start">
+                            <div class="alert alert-danger text-center" id="alert" role="alert" hidden></div>
                             <form class="p-4 p-md-5 border bg-light rounded">
                                 <div class="mb-3">
                                     <input type="text" class="form-control form-control-lg" id="name" name="name" placeholder="name"
@@ -154,6 +155,8 @@
                     document.querySelector("#code").value = department.code;
                     document.querySelector("#code").readOnly = true;
                     document.querySelector("#DepartmentModalTitle").innerHTML = "Update Department Info";
+                    document.querySelector("#alert").innerHTML = "";
+                    document.querySelector("#alert").hidden = true;
                     document.querySelector("#modal-footer").innerHTML = `
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary" id="update-department" onclick="updateDepartment()">Update</button>
@@ -193,6 +196,12 @@
                 window.location.href = "/departments";
             }).catch((err) => {
                 console.log(err.response.data.msg);
+                if(err.response.data.msg != undefined) {
+                    document.querySelector("#alert").innerHTML = err.response.data.msg;
+                    document.querySelector("#alert").hidden = false;
+                    document.body.scrollTop = 0; // For Safari
+                    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+                }
             });
         }
         const updateDepartment = async () => {

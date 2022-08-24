@@ -8,16 +8,16 @@ export async function getAllDepartments(req, res) {
 export async function addDepartment(req, res) {
     const department = new Department(req.body);
     department.save()
-        .then(() => (res.json({"msg":"Department Saved on Database."})))
+        .then(() => (res.status(200).json({"msg":"Department Saved on Database."})))
         .catch((error) => {
             console.log(error);
-            res.json({"msg":"Failed to save on database."});
+            res.status(400).json({"msg":"Failed to save on database."});
         });
 }
 
 export async function getDepartment(req, res) {
     const department = await Department.findOne({code: req.params.code}, "-_id -__v");
-    res.json({"msg":department});
+    res.status(200).json({"msg":department});
 }
 
 export async function updateDepartment(req, res) {
@@ -27,10 +27,10 @@ export async function updateDepartment(req, res) {
     },{
         ...update
     });
-    res.json({"msg":result});
+    res.status(200).json({"msg":result});
 }
 
 export async function deleteDepartment(req, res) {
     const result = await Department.deleteOne({code: req.params.code});
-    res.json({"msg":result});
+    res.status(200).json({"msg":result});
 }
