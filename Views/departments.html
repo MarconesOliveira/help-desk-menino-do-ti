@@ -34,10 +34,54 @@
                 </div>
             </header>
             <div class="container row my-5 mx-auto align-items-start">
-                <h4 class="display-5">All Departments Registered</h4>
-                <div id="departments"></div>
+                <div class="row align-items-center justify-content-center">
+                    <h4 class="display-5 col-sm-8">All Departments Registered</h4>
+                    <button class="btn btn-primary col-4" id="new-department" disabled data-bs-toggle="modal" data-bs-target="#DepartmentModal" onclick="updateForm()">Create new Department</button>
+                </div>
+                <div id="departments" class="row"></div>
             </div>
         </main>
+        <div class="modal fade" id="DepartmentModal" tabindex="-1" aria-labelledby="DepartmentModal" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="DepartmentModalTitle">Update Department Info</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="modal-body">
+                        <div class="col-10 mx-auto text-start">
+                            <form class="p-4 p-md-5 border bg-light rounded">
+                                <div class="mb-3">
+                                    <input type="text" class="form-control form-control-lg" id="name" name="name" placeholder="name"
+                                        required>
+                                    <label for="name" class="text-muted m-1">Department name. Ex.: Jornalismo</label>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="text" class="form-control form-control-lg" id="supervisor" name="supervisor" placeholder="supervisor"
+                                        required>
+                                    <label for="supervisor" class="text-muted m-1">Department supervisor. Ex.: Dio Brando</label>
+                                </div>
+                                <div>
+                                    <input type="email" class="form-control form-control-lg" id="email" name="email" placeholder="email"
+                                        required>
+                                    <label for="email" class="text-muted m-1">Your email. Ex.: dio_brando@gmail.com</label>
+                                </div>
+                                <div>
+                                    <input type="text" class="form-control form-control-lg" id="code" name="code"
+                                        placeholder="code" readonly>
+                                    <label for="code" class="text-muted m-1">Department code.</label>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer" id="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="update-department" onclick="updateDepartment()">Update</button>
+                        <button type="button" class="btn btn-danger" id="delete-department" onclick="deleteDepartment()">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <footer>
             <div class="row border-top border-dark p-2">
                 <div class="col-sm-4">
@@ -66,7 +110,7 @@
                 departments.forEach(department => {
                     const card = `
                         <div class="col-sm-6 col-lg-4">
-                            <a href="/login">
+                            <span id="${department.code}" ${getToken() ? `data-bs-toggle="modal" data-bs-target="#DepartmentModal" onclick="updateModal(this.id)"`: ""}>
                                 <div class="card my-2 p-2 shadow-lg">
                                     <div class="card-body">
                                         <div class="card-title display-5">
@@ -79,7 +123,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </a>
+                            </span>
                         </div>`;
                     document.querySelector("#departments").innerHTML += card;
                 });
@@ -98,6 +142,97 @@
                 </a>
             `;
             document.querySelector("#ticket-link").disabled = false;
+            document.querySelector("#new-department").disabled = false;
+        }
+        const updateModal = (departmentId) => {
+            axios.get(`/department/${departmentId}`)
+                .then(res => {
+                    const department = res.data.msg;
+                    document.querySelector("#name").value = department.name;
+                    document.querySelector("#supervisor").value = department.supervisor;
+                    document.querySelector("#email").value = department.email;
+                    document.querySelector("#code").value = department.code;
+                    document.querySelector("#code").readOnly = true;
+                    document.querySelector("#DepartmentModalTitle").innerHTML = "Update Department Info";
+                    document.querySelector("#modal-footer").innerHTML = `
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="update-department" onclick="updateDepartment()">Update</button>
+                        <button type="button" class="btn btn-danger" id="delete-department" onclick="deleteDepartment()">Delete</button>
+                    `;
+                }).catch((err) => {
+                    console.log(err.response.data.msg);
+                });
+        }
+        const updateForm = () => {
+            document.querySelector("#code").readOnly = false;
+            document.querySelector("#name").value = "";
+            document.querySelector("#supervisor").value = "";
+            document.querySelector("#email").value = "";
+            document.querySelector("#code").value = "";
+            document.querySelector("#DepartmentModalTitle").innerHTML = "Create New Department";
+            document.querySelector("#modal-footer").innerHTML = `
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="createDepartment()">Create</button>
+            `;
+        }
+        const createDepartment = async () => {
+            const form = document.querySelector('form');
+            const formData = new FormData(form);
+            const formDataJSON = Object.fromEntries(formData.entries());
+
+            const request = {
+                method: "POST",
+                url: "/department",
+                data: JSON.stringify(formDataJSON),
+                headers: {
+                    Authorization: `Bearer ${getToken()}`,
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            };
+            axios(request).then(res => {
+                window.location.href = "/departments";
+            }).catch((err) => {
+                console.log(err.response.data.msg);
+            });
+        }
+        const updateDepartment = async () => {
+            const form = document.querySelector("form");
+            const formData = new FormData(form);
+            const formDataJSON = Object.fromEntries(formData.entries());
+
+            axios({
+                method: "PUT",
+                url: `/department/${formDataJSON.code}`,
+                data: JSON.stringify(formDataJSON),
+                headers: {
+                    Authorization: `Bearer ${getToken()}`,
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            }).then(res => {
+                window.location.href = "/departments";
+            }).catch((err) => {
+                console.log(err.response.data.msg);
+            });
+        }
+        const deleteDepartment = async () => {
+            const form = document.querySelector("form");
+            const formData = new FormData(form);
+            const formDataJSON = Object.fromEntries(formData.entries());
+            console.log(formDataJSON);
+
+            axios({
+                method: "DELETE",
+                url: `/department/${formDataJSON.code}`,
+                data: JSON.stringify(formDataJSON),
+                headers: {
+                    Authorization: `Bearer ${getToken()}`,
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            }).then(res => {
+                window.location.href = "/departments";
+            }).catch((err) => {
+                console.log(err.response.data.msg);
+            });
         }
     </script>
 </body>

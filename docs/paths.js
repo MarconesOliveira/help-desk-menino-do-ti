@@ -269,6 +269,7 @@ const swaggerPaths = {
     },
     "/department": {
         "post": {
+            "security": [{ "bearerAuth": [ ] }],
             "tags": ["Department"],
             "summary": "Create new Department",
             "description": "Create a new Department on database. No token required. 'code' is unique.",

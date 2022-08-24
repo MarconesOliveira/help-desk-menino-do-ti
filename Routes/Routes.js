@@ -30,7 +30,7 @@ router.get("/all_departments", (req, res) => FrontController.getAllDepartments(r
 //Routes to create new instances of an entity.
 router.post("/ticket", validateToken, (req, res) => FrontController.addTicket(req, res));
 router.post("/user", (req, res) => FrontController.addUser(req, res));
-router.post("/department", (req, res) => FrontController.addDepartment(req, res));
+router.post("/department", validateToken, (req, res) => FrontController.addDepartment(req, res));
 
 //Routes to get a specific instance of an entity.
 router.get("/ticket/:code", (req, res) => FrontController.getTicket(req, res));
