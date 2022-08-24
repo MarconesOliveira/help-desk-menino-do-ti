@@ -60,6 +60,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary" id="update-ticket" onclick="updateTicket()" disabled>Update</button>
+                        <button type="button" class="btn btn-danger" id="delete-ticket" onclick="deleteTicket()" disabled>Delete</button>
                     </div>
                 </div>
             </div>
@@ -162,6 +163,7 @@
                     } else {
                         document.querySelector("#TicketModalLabel").innerHTML = `Update the Ticket`;
                         document.querySelector("#update-ticket").disabled = false;
+                        document.querySelector("#delete-ticket").disabled = false;
                         document.querySelector("#modal-body").innerHTML = `
                         <div class="col-10 mx-auto text-start">
                             <form class="p-4 p-md-5 border bg-light rounded">
@@ -206,6 +208,26 @@
 
             axios({
                 method: "PUT",
+                url: `/ticket/${formDataJSON.code}`,
+                data: JSON.stringify(formDataJSON),
+                headers: {
+                    Authorization: `Bearer ${getToken()}`,
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            }).then(res => {
+                window.location.href = "/";
+            }).catch((err) => {
+                console.log(err.response.data.msg);
+            });
+        }
+        const deleteTicket = async () => {
+            const form = document.querySelector("form");
+            const formData = new FormData(form);
+            const formDataJSON = Object.fromEntries(formData.entries());
+            console.log(formDataJSON);
+
+            axios({
+                method: "DELETE",
                 url: `/ticket/${formDataJSON.code}`,
                 data: JSON.stringify(formDataJSON),
                 headers: {

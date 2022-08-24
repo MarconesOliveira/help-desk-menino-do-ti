@@ -11,6 +11,7 @@
         a{text-decoration: none; color: initial;transition: 0.5s;}
         a:hover{color: darkgray;}
         html{min-width: 400px;}
+        .current-user{box-shadow: 0px 0px 30px green;}
     </style>
     <title>Menino_do_TI</title>
 </head>
@@ -38,6 +39,49 @@
                 <div id="users" class="row"></div>
             </div>
         </main>
+
+        <div class="modal fade" id="UserModal" tabindex="-1" aria-labelledby="UserModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="UserModalLabel">Update your info</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="modal-body">
+                        <div class="col-10 mx-auto text-start">
+                            <form class="p-4 p-md-5 border bg-light rounded">
+                                <div class="mb-3">
+                                    <input type="text" class="form-control form-control-lg" id="employeeID" name="employeeID" placeholder="employeeID"
+                                        readonly>
+                                    <label for="employeeID" class="text-muted m-1">Your employeeID. Ex.: 001</label>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="text" class="form-control form-control-lg" id="name" name="name" placeholder="name"
+                                        required>
+                                    <label for="name" class="text-muted m-1">Your name. Ex.: Dio Brando</label>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="number" class="form-control form-control-lg" id="phone" name="phone" placeholder="phone"
+                                        required>
+                                    <label for="phone" class="text-muted m-1">Your phone. Ex.: 40028922</label>
+                                </div>
+                                <div>
+                                    <input type="email" class="form-control form-control-lg" id="email" name="email" placeholder="email"
+                                        required>
+                                    <label for="email" class="text-muted m-1">Your email. Ex.: dio_brando@gmail.com</label>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="update-user" onclick="updateUser()">Update</button>
+                        <button type="button" class="btn btn-danger" id="delete-user" onclick="deleteUser()">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <footer>
             <div class="row border-top border-dark p-2">
                 <div class="col-sm-4">
@@ -65,33 +109,6 @@
         </footer>
     </div>
     <script>
-        axios.get("/all_users")
-            .then(res => {
-                const users = res.data.msg;
-                users.forEach(user => {
-                    const card = `
-                        <div class="col-sm-6 col-lg-4">
-                            <a href="/login">
-                                <div class="card my-2 p-2 shadow-lg">
-                                    <div class="card-body">
-                                        <div class="card-title display-5">
-                                            ${user.name}
-                                        </div>
-                                        <div class="card-text">
-                                            <p class="lead p-0 m-0">EmployeeID: ${user.employeeID}</p>
-                                            <p class="lead p-0 m-0">Email: ${user.email}</p>
-                                            <p class="lead p-0 m-0">Phone: ${user.phone}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>`;
-                    document.querySelector("#users").innerHTML += card;
-                });
-            }).catch((err) => {
-                console.log(err.response.data.msg);
-            });
-
         const parseJwt = (token) => {
             var base64Url = token.split('.')[1];
             var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -118,6 +135,81 @@
                     <button class="btn btn-outline-primary">Home</button>
                 </a>
             `;
+        }
+        axios.get("/all_users")
+            .then(res => {
+                let currentUserEmployeeID = null;
+                if(getToken() != null) {
+                    currentUserEmployeeID = parseJwt(localStorage.getItem("token_menino_do_ti")).employeeID;
+                }
+                const users = res.data.msg;
+                users.forEach(user => {
+                    const card = `
+                        <div class="col-sm-6 col-lg-4">
+                            <span id="${user.employeeID}" ${currentUserEmployeeID === user.employeeID ? `data-bs-toggle="modal" data-bs-target="#UserModal" onclick="updateModal(this.id)" class="current-user"`: ""}>
+                                <div class="card my-2 p-2 ${currentUserEmployeeID === user.employeeID ? "current-user" : "shadow-lg"}">
+                                    <div class="card-body">
+                                        <div class="card-title display-5">
+                                            ${user.name}
+                                        </div>
+                                        <div class="card-text">
+                                            <p class="lead p-0 m-0">EmployeeID: ${user.employeeID}</p>
+                                            <p class="lead p-0 m-0">Email: ${user.email}</p>
+                                            <p class="lead p-0 m-0">Phone: ${user.phone}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </span>
+                        </div>`;
+                    document.querySelector("#users").innerHTML += card;
+                });
+            }).catch((err) => {
+                console.log(err.response.data.msg);
+            });
+        const updateModal = (employeeID) => {
+            axios.get(`/user/${employeeID}`)
+                .then(res => {
+                    const currentUser = res.data.msg;
+                    document.querySelector("#employeeID").value = currentUser.employeeID;
+                    document.querySelector("#name").value = currentUser.name;
+                    document.querySelector("#phone").value = currentUser.phone;
+                    document.querySelector("#email").value = currentUser.email;
+                }).catch((err) => {
+                    console.log(err.response.data.msg);
+                });
+        }
+        const updateUser = async () => {
+            const form = document.querySelector("form");
+            const formData = new FormData(form);
+            const formDataJSON = Object.fromEntries(formData.entries());
+
+            axios({
+                method: "PUT",
+                url: "/user",
+                data: JSON.stringify(formDataJSON),
+                headers: {
+                    Authorization: `Bearer ${getToken()}`,
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            }).then(res => {
+                deleteToken();
+            }).catch((err) => {
+                console.log(err.response.data.msg);
+            });
+        }
+        const deleteUser = async () => {
+            axios({
+                method: "DELETE",
+                url: "/user",
+                headers: {
+                    Authorization: `Bearer ${getToken()}`,
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            }).then(res => {
+                deleteToken();
+            }).catch((err) => {
+                console.log(err.response.data.msg);
+            });
         }
     </script>
 </body>
