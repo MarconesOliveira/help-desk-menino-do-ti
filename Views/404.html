@@ -35,25 +35,19 @@
         <footer>
             <div class="row border-top border-dark p-2">
                 <div class="col-sm-4">
-                    <a href="/users">
-                        <button type="button" class="btn btn-outline-secondary">
-                            All Users
-                        </button>
-                    </a>
+                    <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='/users'">
+                        All Users
+                    </button>
                 </div>
                 <div class="col-sm-4">
-                    <a href="/departments">
-                        <button type="button" class="btn btn-outline-secondary">
-                            All Departments
-                        </button>
-                    </a>
+                    <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='/departments'">
+                        All Departments
+                    </button>
                 </div>
                 <div class="col-sm-4">
-                    <a href="/ticket">
-                        <button type="button" class="btn btn-outline-secondary">
-                            New Ticket
-                        </button>
-                    </a>
+                    <button type="button" class="btn btn-outline-secondary" id="ticket-link" onclick="window.location.href='/ticket'" disabled>
+                        New Ticket
+                    </button>
                 </div>
             </div>
         </footer>
