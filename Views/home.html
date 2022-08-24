@@ -33,17 +33,17 @@
                     </div>
                 </div>
             </header>
-            <div class="container row my-5">
+            <div class="container row my-5 mx-auto align-items-start">
                 <div class="col-md-6 col-lg-4">
-                    <h4 class="my-3">Tickets Abertos</h4>
+                    <h4 class="my-3 display-5">New Tickets</h4>
                     <div id="tickets_abertos"></div>
                 </div>
                 <div class="col-md-6 col-lg-4">
-                    <h4 class="my-3">Tickets Em Manutenção</h4>
+                    <h4 class="my-3 display-5">Solving</h4>
                     <div id="tickets_manutencao"></div>
                 </div>
                 <div class="col-md-6 col-lg-4">
-                    <h4 class="my-3">Tickets Fechados</h4>
+                    <h4 class="my-3 display-5">Done</h4>
                     <div id="tickets_fechados"></div>
                 </div>
             </div>
@@ -144,6 +144,7 @@
                             <p>Description: ${ticket.description}</p>
                             <p>Requester: ${ticket.requester}</p>
                             <p>State: ${ticket.state}</p>
+                            <p>issuedAt: ${ticket.issuedAt}</p>
                         `;
                     } else {
                         document.querySelector("#TicketModalLabel").innerHTML = `Update the Ticket`;

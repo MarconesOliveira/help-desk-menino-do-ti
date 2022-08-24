@@ -8,6 +8,8 @@ export async function getAllTickets(req, res) {
 
 export async function addTicket(req, res) {
     const ticket = new Ticket(req.body);
+    const newDate = new Date();
+    ticket.issuedAt = newDate.getDate() + "/" + (newDate.getMonth()+1) + "/" + newDate.getFullYear();
     ticket.save()
         .then(() => (res.json({"msg":"Ticket Saved on Database."})))
         .catch((error) => {
