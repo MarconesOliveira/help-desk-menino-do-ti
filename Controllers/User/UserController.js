@@ -4,7 +4,7 @@ import { createToken } from "../../utils/jwt.js";
 
 export async function getAllUsers(req, res) {
     const users = await User.find({}, "-_id -__v");
-    res.status(200).json({"msg":users});
+    return res.status(200).json({"msg":users});
 }
 
 export async function addUser(req, res) {
@@ -13,20 +13,20 @@ export async function addUser(req, res) {
         req.body.password = hashedPassword;
     } catch (error) {
         console.log(error);
-        res.json({"msg":"Error saving password."});
+        return res.json({"msg":"Error saving password."});
     }
     const user = new User(req.body);
     user.save()
         .then(() => (res.status(200).json({"msg":"User Saved on Database."})))
         .catch((error) => {
             console.log(error.code);
-            res.status(400).json({"msg":"Failed to save on database."});
+            return res.status(400).json({"msg":"Failed to save on database."});
         });
 }
 
 export async function getUser(req, res) {
     const user = await User.findOne({employeeID: req.params.employeeID}, "-_id -__v");
-    res.json({"msg":user});
+    return res.json({"msg":user});
 }
 
 export async function updateUser(req, res) {
@@ -37,12 +37,12 @@ export async function updateUser(req, res) {
     },{
         ...update
     });
-    res.json({"msg":result});
+    return res.status(200).json({"msg":result});
 }
 
 export async function deleteUser(req, res) {
     const result = await User.deleteOne({employeeID: req.user.employeeID});
-    res.json({"msg":result});
+    return res.status(200).json({"msg":result});
 }
 
 export async function userLogin(req, res) {
@@ -64,10 +64,6 @@ export async function userLogin(req, res) {
         return res.status(400).json({"msg":"Password incorrect."});
     } catch (error) {
         console.log(error);
-        res.json({"msg":"Error checking password."});
+        return res.status(400).json({"msg":"Error checking password."});
     }
-}
-
-export const teste = (a, b) => {
-    return a + b;
 }

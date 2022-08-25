@@ -1,7 +1,15 @@
-import { teste } from "./UserController.js";
+import { getAllUsers } from "./UserController.js";
+import request from "supertest";
 
-describe("User Login", () => {
-    test("Successful Login", () => {
-        expect(teste(1, 2)).toBe(3);
-    }, );
+describe("User Operations", () => {
+    beforeAll(() => {
+
+    });
+    afterAll(() => {
+        
+    });
+    test("Get all Users", () => {
+        const response = await request(baseURL).get("/all_users");
+        expect(response.statusCode).toBe(200);
+    });
 })
