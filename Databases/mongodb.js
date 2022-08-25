@@ -12,7 +12,7 @@ const uri = `mongodb://${host}:${port}/${db_name}`;
 const atlas = process.env.ATLAS_URI;
 
 try {
-    await mongoose.connect(atlas);
+    mongoose.connect(atlas);
 } catch (error) {
     console.log("Unable to connect to MongoDB.");
     console.log(error);

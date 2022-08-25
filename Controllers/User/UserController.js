@@ -67,3 +67,7 @@ export async function userLogin(req, res) {
         res.json({"msg":"Error checking password."});
     }
 }
+
+export const teste = (a, b) => {
+    return a + b;
+}
