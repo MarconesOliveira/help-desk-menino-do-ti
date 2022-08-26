@@ -1,17 +1,33 @@
 import Department from "../../Models/Department.js";
+import User from "../../Models/User.js";
 
 export async function getAllDepartments(req, res) {
     const departments = await Department.find({}, "-_id -__v");
-    res.json({"msg":departments});
+    return res.status(200).json({"msg":departments});
+}
+
+const supervisorExistInDatabase = async(providedEmployeeID) => {
+    const supervisor = await User.find({ employeeID: providedEmployeeID });
+    if(supervisor.length === 0) {
+        return false;
+    }
+    return true;
 }
 
 export async function addDepartment(req, res) {
     const department = new Department(req.body);
+    
+    if( !(await supervisorExistInDatabase(department.supervisor))) {
+        return res.status(400).json({ "msg":"Invalid Supervisor EmployeeID." });
+    }
+
     department.save()
         .then(() => (res.status(200).json({"msg":"Department Saved on Database."})))
         .catch((error) => {
-            console.log(error);
-            res.status(400).json({"msg":"Failed to save on database."});
+            if(error.code === 11000) {
+                return res.status(400).json({"msg":"Invalid Department Code."});
+            }
+            return res.status(400).json({"msg":"Failed to save on database."});
         });
 }
 
@@ -22,6 +38,11 @@ export async function getDepartment(req, res) {
 
 export async function updateDepartment(req, res) {
     const update = req.body;
+
+    if( !(await supervisorExistInDatabase(update.supervisor))) {
+        return res.status(400).json({ "msg":"Invalid Supervisor EmployeeID." });
+    }
+
     const result = await Department.updateOne({
         code: req.params.code
     },{
