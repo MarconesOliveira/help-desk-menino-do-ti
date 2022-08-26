@@ -1,5 +1,6 @@
 import supertest from "supertest";
 import App from "./App.js";
+import mongoose from "./Databases/mongodb.js";
 
 const request = supertest(App);
 
@@ -8,7 +9,7 @@ describe("App endpoints", () => {
 
     });
     afterAll(async () => {
-        
+        mongoose.disconnect().then(console.log("MongoDB disconnected."));
     });
     beforeEach(async () => {
         
