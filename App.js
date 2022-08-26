@@ -2,15 +2,14 @@
 import Express from "express";
 import dotenv from "dotenv";
 import path from "path";
-import { fileURLToPath } from 'url';
 import * as swaggerUi from "swagger-ui-express";
 import swaggerConfig from "./docs/swaggerConfig.js";
 //Routes created
 import router from "./Routes/Routes.js";
+import * as currentPath from "./utils/currentPath.cjs";
 
 //Path resolving
-let __dirname = path.dirname(fileURLToPath(import.meta.url));
-__dirname = path.normalize(`${__dirname}/`);
+const __dirname = (path.normalize(`${currentPath.default}/../`));
 
 //Initial Setup
 dotenv.config();

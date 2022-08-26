@@ -1,13 +1,12 @@
 import Express from "express";
 import path from "path";
-import { fileURLToPath } from 'url';
 import * as FrontController from "../Controllers/FrontController.js";
 import { validateToken } from "../utils/jwt.js";
+import * as currentPath from "../utils/currentPath.cjs";
 const router = Express.Router();
 
 //Path resolving
-let __dirname = path.dirname(fileURLToPath(import.meta.url));
-__dirname = path.normalize(`${__dirname}/../`);
+const __dirname = (path.normalize(`${currentPath.default}/../`));
 
 //Generic greeting.
 router.get("/", (req, res) => (res.status(200).sendFile(path.join(__dirname + "Views/home.html"))));
