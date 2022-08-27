@@ -1,12 +1,14 @@
 import { createClient } from 'redis';
 
-const client = createClient();
+const host = process.env.REDIS_HOST;
+const port = process.env.REDIS_PORT;
 
-client.on('error', (err) => console.log('Redis Client Error', err));
+const redisClient = createClient({
+    url:`redis://${host}:${port}`
+});
 
-await client.connect();
+redisClient.on('error', (err) => console.log('Redis Client Error', err));
 
-await client.set('key', 'value');
-const value = await client.get('key');
+await redisClient.connect();
 
-export default client;
+export default redisClient;
