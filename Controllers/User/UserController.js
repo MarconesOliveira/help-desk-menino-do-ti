@@ -1,5 +1,6 @@
 import User from "../../Models/User.js";
 import bcrypt from "bcrypt";
+import neo4jQuery from "../../Databases/neo4j.js";
 import { createToken } from "../../utils/jwt.js";
 
 export async function getAllUsers(req, res) {
@@ -17,7 +18,10 @@ export async function addUser(req, res) {
     }
     const user = new User(req.body);
     user.save()
-        .then(() => (res.status(200).json({"msg":"User Saved on Database."})))
+        .then(() => {
+            neo4jQuery(`CREATE (a:Person {name: "${user.name}", employeeID: "${user.employeeID}"}) RETURN a`);
+            return res.status(200).json({"msg":"User Saved on Database."})
+        })
         .catch((error) => {
             console.log(error.code);
             return res.status(400).json({"msg":"Failed to save on database."});
@@ -42,6 +46,7 @@ export async function updateUser(req, res) {
 
 export async function deleteUser(req, res) {
     const result = await User.deleteOne({employeeID: req.user.employeeID});
+    neo4jQuery(`match (a:Person{employeeID: "${req.user.employeeID}"}) detach delete (a)`);
     return res.status(200).json({"msg":result});
 }
 
