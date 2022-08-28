@@ -1,14 +1,20 @@
 import { createClient } from 'redis';
 
-const host = process.env.REDIS_HOST;
-const port = process.env.REDIS_PORT;
+//Dev
+const urlLocalhost = `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`;
+//Production
+const urlRedisCloud = `redis://${process.env.REDIS_CLOUD}`;
+//If environment variable USE_TEST_DATABASE exists and it's set to true use the Dev database
+const selectedDatabase = (process.env.USE_TEST_DATABASE) ? urlLocalhost : urlRedisCloud ;
 
 const redisClient = createClient({
-    url:`redis://${host}:${port}`
+    url:selectedDatabase
 });
 
-redisClient.on('error', (err) => console.log('Redis Client Error', err));
-
-await redisClient.connect();
+try {
+    await redisClient.connect().then(() => (console.log("Redis is connected.")));
+} catch (error) {
+    console.log(error);
+}
 
 export default redisClient;
