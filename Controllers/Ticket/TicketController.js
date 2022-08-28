@@ -50,8 +50,9 @@ export async function addTicket(req, res) {
                 .then(console.log("Cache reset."))
                 .catch();
             neo4jQuery(`CREATE (a:Ticket {name: "Ticket ${ticket.code}", desc: "${ticket.description}", code: "${ticket.code}"}) RETURN a`)
-                .then(neo4jQuery(`match (p:Person {employeeID: "${ticket.requester}"}) match (d:Ticket {code: "${ticket.code}"}) create (p)-[rel:REQUISITOU]->(d)`))
-                    .then(neo4jQuery(`match (p:Ticket {code: "${ticket.code}"}) match (d:Department {code: "${ticket.department}"}) create (p)-[rel:ORIGEM]->(d)`));
+                .then(() => neo4jQuery(`match (p:Person {employeeID: "${ticket.requester}"}) match (d:Ticket {code: "${ticket.code}"}) create (p)-[rel:REQUISITOU]->(d)`))
+                    .then(() => neo4jQuery(`match (p:Ticket {code: "${ticket.code}"}) match (d:Department {code: "${ticket.department}"}) create (p)-[rel:ORIGEM]->(d)`))
+                    .then(() => console.log("Query finished."));
             return res.status(200).json({"msg":"Ticket Saved on Database."})
         })
         .catch((error) => {

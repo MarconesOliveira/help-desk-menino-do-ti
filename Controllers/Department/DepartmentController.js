@@ -24,9 +24,10 @@ export async function addDepartment(req, res) {
 
     department.save()
         .then(() => {
-            neo4jQuery(`CREATE (a:Department {name: "${department.name}", code: "${department.code}"}) RETURN a`)
-                .then(neo4jQuery(`match (p:Person {employeeID: "${department.supervisor}"}) match (d:Department {code: "${department.code}"}) create (p)-[rel:SUPERVISIONA]->(d)`));
-            res.status(200).json({"msg":"Department Saved on Database."});
+            neo4jQuery(`CREATE (a:Department {name: "${department.name}", code: "${department.code}"})`)
+                .then(() => neo4jQuery(`match (p:Person {employeeID: "${department.supervisor}"}) match (d:Department {code: "${department.code}"}) create (p)-[rel:SUPERVISIONA]->(d)`))
+                .then(() => console.log("Finished neo4j query."));
+            return res.status(200).json({"msg":"Department Saved on Database."});
         })
         .catch((error) => {
             if(error.code === 11000) {
