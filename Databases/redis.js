@@ -8,7 +8,7 @@ const urlLocalhost = `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT
 const urlRedisCloud = `redis://${process.env.REDIS_CLOUD}`;
 //If environment variable USE_TEST_DATABASE exists and it's set to true use the Dev database
 const selectedDatabase = (process.env.USE_TEST_DATABASE) ? urlLocalhost : urlRedisCloud ;
-console.log(selectedDatabase);
+
 const redisClient = createClient({
     url:selectedDatabase
 });
