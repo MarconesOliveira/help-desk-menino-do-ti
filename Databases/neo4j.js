@@ -2,12 +2,26 @@ import { driver as _driver, auth } from 'neo4j-driver';
 import dotenv from "dotenv";
 dotenv.config();
 
-const host = process.env.NEO4J_HOST;
-const port = process.env.NEO4J_HOST;
-const user = process.env.NEO4J_USER;
-const password = process.env.NEO4J_PASSWORD;
+const dev = process.env.USE_TEST_DATABASE;
 
-const driver = _driver(`bolt://${host}:${port}`, auth.basic(user, password));
-const neo4jClient = driver.session();
+const uri = (dev) ? `bolt://${process.env.NEO4J_HOST}:${process.env.NEO4J_PORT}` : process.env.AURA_DB_URI ;
+const user = (dev) ? process.env.NEO4J_USER : process.env.AURA_DB_USER;
+const password = (dev) ? process.env.NEO4J_PASSWORD : process.env.AURA_DB_PASSWORD;
 
-export default neo4jClient;
+const neo4jQuery = async (query) => {
+    const driver = _driver( uri , auth.basic(user, password));
+    const session = driver.session({ database: 'neo4j' });
+
+    try {
+        const result = await session.run(query)
+        console.log("Query on Neo4j: " + result);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        await session.close();
+    }
+
+    await driver.close();
+}
+
+export default neo4jQuery;
