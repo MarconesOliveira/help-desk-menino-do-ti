@@ -1,4 +1,6 @@
 import { createClient } from 'redis';
+import dotenv from "dotenv";
+dotenv.config();
 
 //Dev
 const urlLocalhost = `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`;

@@ -1,4 +1,6 @@
 import { driver as _driver, auth } from 'neo4j-driver';
+import dotenv from "dotenv";
+dotenv.config();
 
 const host = process.env.NEO4J_HOST;
 const port = process.env.NEO4J_HOST;

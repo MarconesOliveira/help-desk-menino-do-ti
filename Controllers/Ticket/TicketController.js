@@ -1,10 +1,17 @@
 import Ticket from "../../Models/Ticket.js";
 import User from "../../Models/User.js";
 import Department from "../../Models/Department.js";
+import redisClient from "../../Databases/redis.js";
 import mongoose from "mongoose";
 
 export async function getAllTickets(req, res) {
+    const ticketsOnCache = await redisClient.get("tickets");
+    if (ticketsOnCache) {
+        console.log("Cached response.");
+        return res.status(200).json({"msg":JSON.parse(ticketsOnCache)});
+    }
     const tickets = await Ticket.find({}, "-_id -__v");
+    await redisClient.set("tickets", JSON.stringify(tickets));
     return res.status(200).json({"msg":tickets});
 }
 
@@ -38,6 +45,9 @@ export async function addTicket(req, res) {
     ticket.issuedAt = newDate.getDate() + "/" + (newDate.getMonth()+1) + "/" + newDate.getFullYear();
     ticket.save()
         .then(() => {
+            redisClient.del("tickets")
+                .then(console.log("Cache reset."))
+                .catch();
             return res.status(200).json({"msg":"Ticket Saved on Database."})
         })
         .catch((error) => {
@@ -61,10 +71,16 @@ export async function updateTicket(req, res) {
     },{
         ...update
     });
+    redisClient.del("tickets")
+        .then(console.log("Cache reset."))
+        .catch();
     res.json({"msg":result});
 }
 
 export async function deleteTicket(req, res) {
     const result = await Ticket.deleteOne({code: req.params.code});
+    redisClient.del("tickets")
+        .then(console.log("Cache reset."))
+        .catch();
     res.json({"msg":result});
 }
