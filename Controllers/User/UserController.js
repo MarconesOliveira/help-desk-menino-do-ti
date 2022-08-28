@@ -41,6 +41,7 @@ export async function updateUser(req, res) {
     },{
         ...update
     });
+    neo4jQuery(`match (a:Person{employeeID: "${user.employeeID}"}) set a.name = "${update.name}" return (a)`);
     return res.status(200).json({"msg":result});
 }
 
