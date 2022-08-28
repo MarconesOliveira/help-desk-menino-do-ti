@@ -159,8 +159,7 @@
                                     <label for="code" class="text-muted m-1">Ticket code.</label>
                                 </div>
                                 <div class="mb-3">
-                                    <input type="text" class="form-control form-control-lg" id="department" name="department" placeholder="department"
-                                        required value="${ticket.department}">
+                                    <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg" id="department" name="department" required></select>
                                     <label for="department" class="text-muted m-1">Edit department.</label>
                                 </div>
                                 <div class="mb-3">
@@ -174,8 +173,11 @@
                                     <label for="requester" class="text-muted m-1">Requester.</label>
                                 </div>
                                 <div class="mb-3">
-                                    <input type="text" class="form-control form-control-lg" id="state" name="state"
-                                        placeholder="state" required value="${ticket.state}">
+                                    <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg" id="state" name="state" required>
+                                        <option ${(ticket.state === "Aberto") ? "selected" : ""} value="Aberto">Aberto</option>
+                                        <option ${(ticket.state === "Manutencao") ? "selected" : ""} value="Manutencao">Em Manutenção</option>
+                                        <option ${(ticket.state === "Fechado") ? "selected" : ""} value="Fechado">Fechado</option>
+                                    </select>
                                     <label for="state" class="text-muted m-1">Edit state.</label>
                                 </div>
                                 <div class="mb-3">
@@ -186,6 +188,21 @@
                             </form>
                         </div>
                         `;
+                        axios.get("/all_departments")
+                            .then(response => {
+                                if(response.data.msg.length > 0) {
+                                    let departmentOptions = document.querySelector("#department");
+                                    response.data.msg.forEach(department => {
+                                        console.log(department);
+                                        departmentOptions.innerHTML += `
+                                            <option ${(ticket.state === "Aberto") ? "selected" : ""} value="${department.code}">${department.name}</option>
+                                        `;
+                                    });
+                                }
+                            })
+                            .catch(err => {
+                                console.log(err);
+                            })
                     }
                 }).catch((err) => {
                     console.log(err.response.data.msg);
@@ -231,7 +248,7 @@
                 console.log(err.response.data.msg);
             });
         }
-        
+        setTimeout(() => (location.reload()), 10000);
     </script>
 </body>
 </html>

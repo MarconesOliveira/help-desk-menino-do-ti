@@ -31,6 +31,7 @@
                 </div>
             </header>
             <div class="col-sm-10 col-md-8 col-lg-6 mx-auto text-start my-3">
+                <div class="alert alert-danger text-center" id="alert" role="alert" hidden></div>
                 <form class="p-4 p-md-5 border bg-light rounded">
                     <div class="mb-3">
                         <input type="text" class="form-control form-control-lg" id="description" name="description" placeholder="description"
@@ -38,8 +39,7 @@
                         <label for="description" class="text-muted m-1">Description of the issue. Ex.: O wifi caiu.</label>
                     </div>
                     <div class="mb-3">
-                        <input type="text" class="form-control form-control-lg" id="department" name="department" placeholder="department"
-                            required>
+                        <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg" id="department" name="department" required></select>
                         <label for="department" class="text-muted m-1">Origin department. Ex.: Jornalismo</label>
                     </div>
                     <div class="mb-3">
@@ -114,15 +114,34 @@
                 }
             };
             axios(request).then(res => {
-                console.log(res.data);
                 window.location.href = "/";
             }).catch((err) => {
                 console.log(err.response.data.msg);
+                if(err.response.data.msg != undefined) {
+                    document.querySelector("#alert").innerHTML = err.response.data.msg;
+                    document.querySelector("#alert").hidden = false;
+                }
             });
 
         }
-        const userName = parseJwt(localStorage.getItem("token_menino_do_ti")).name;
-        document.querySelector("#requester").value = userName;
+        const {employeeID} = parseJwt(localStorage.getItem("token_menino_do_ti"));
+        document.querySelector("#requester").value = employeeID;
+        
+        axios.get("/all_departments")
+            .then(response => {
+                if(response.data.msg.length > 0) {
+                    let departmentOptions = document.querySelector("#department");
+                    response.data.msg.forEach(department => {
+                        console.log(department);
+                        departmentOptions.innerHTML += `
+                            <option value="${department.code}">${department.name}</option>
+                        `;
+                    });
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            })
     </script>
 </body>
 </html>
