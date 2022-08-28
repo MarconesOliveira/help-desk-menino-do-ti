@@ -1,5 +1,6 @@
 import Department from "../../Models/Department.js";
 import User from "../../Models/User.js";
+import neo4jQuery from "../../Databases/neo4j.js";
 
 export async function getAllDepartments(req, res) {
     const departments = await Department.find({}, "-_id -__v");
@@ -22,7 +23,11 @@ export async function addDepartment(req, res) {
     }
 
     department.save()
-        .then(() => (res.status(200).json({"msg":"Department Saved on Database."})))
+        .then(() => {
+            neo4jQuery(`CREATE (a:Department {name: "${department.name}", code: "${department.code}"}) RETURN a`)
+                .then(neo4jQuery(`match (p:Person {employeeID: "${department.supervisor}"}) match (d:Department {code: "${department.code}"}) create (p)-[rel:SUPERVISIONA]->(d)`));
+            res.status(200).json({"msg":"Department Saved on Database."});
+        })
         .catch((error) => {
             if(error.code === 11000) {
                 return res.status(400).json({"msg":"Invalid Department Code."});
@@ -48,10 +53,11 @@ export async function updateDepartment(req, res) {
     },{
         ...update
     });
-    res.status(200).json({"msg":result});
+    return res.status(200).json({"msg":result});
 }
 
 export async function deleteDepartment(req, res) {
     const result = await Department.deleteOne({code: req.params.code});
+    neo4jQuery(`match (a:Department) where a.code = "${req.params.code}" detach delete (a)`);
     res.status(200).json({"msg":result});
 }

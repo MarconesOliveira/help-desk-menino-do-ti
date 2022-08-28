@@ -2,6 +2,7 @@ import Ticket from "../../Models/Ticket.js";
 import User from "../../Models/User.js";
 import Department from "../../Models/Department.js";
 import redisClient from "../../Databases/redis.js";
+import neo4jQuery from "../../Databases/neo4j.js";
 import mongoose from "mongoose";
 
 export async function getAllTickets(req, res) {
@@ -48,6 +49,9 @@ export async function addTicket(req, res) {
             redisClient.del("tickets")
                 .then(console.log("Cache reset."))
                 .catch();
+            neo4jQuery(`CREATE (a:Ticket {name: "Ticket ${ticket.code}", desc: "${ticket.description}", code: "${ticket.code}"}) RETURN a`)
+                .then(neo4jQuery(`match (p:Person {employeeID: "${ticket.requester}"}) match (d:Ticket {code: "${ticket.code}"}) create (p)-[rel:REQUISITOU]->(d)`))
+                    .then(neo4jQuery(`match (p:Ticket {code: "${ticket.code}"}) match (d:Department {code: "${ticket.department}"}) create (p)-[rel:ORIGEM]->(d)`));
             return res.status(200).json({"msg":"Ticket Saved on Database."})
         })
         .catch((error) => {
@@ -82,5 +86,6 @@ export async function deleteTicket(req, res) {
     redisClient.del("tickets")
         .then(console.log("Cache reset."))
         .catch();
-    res.json({"msg":result});
+        neo4jQuery(`match (a:Ticket) where a.code = "${req.params.code}" detach delete (a)`);
+    return res.status(200).json({"msg":result});
 }
