@@ -13,11 +13,11 @@ const redisClient = createClient({
     url:selectedDatabase
 });
 
-try {
-    await redisClient.connect().then(() => (console.log("Redis is connected.")));
-    await redisClient.del("tickets").then(() => {console.log("Cache cleared.")});
-} catch (error) {
-    console.log(error);
-}
+redisClient.connect()
+.then(() => (console.log("Redis is connected.")))
+        .catch((error) => (console.log(error)));
+redisClient.del("tickets")
+    .then(() => {console.log("Cache cleared.")})
+    .catch((error) => (console.log(error)));
 
 export default redisClient;

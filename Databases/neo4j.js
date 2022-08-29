@@ -12,15 +12,10 @@ const neo4jQuery = async (query) => {
     const driver = _driver( uri , auth.basic(user, password));
     const session = driver.session({ database: 'neo4j' });
 
-    try {
-        const result = await session.run(query)
-        console.log("Query on Neo4j executed.");
-    } catch (error) {
-        console.log(error);
-    } finally {
-        await session.close();
-    }
-
+    await session.run(query)
+        .then(() => console.log("Query on Neo4j executed."))
+        .catch(error => (console.log(error)));
+    await session.close();
     await driver.close();
 }
 
