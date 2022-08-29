@@ -107,8 +107,8 @@
             .then(res => {
                 const tickets = res.data.msg;
                 tickets.forEach(ticket => {
-                    console.log(`/department/${ticket.code}`);
-                    axios.get(`/department/${ticket.code}`)
+                    console.log(`/department/${ticket.department}`);
+                    axios.get(`/department/${ticket.department}`)
                         .then((data) => {
                             console.table(data.data.msg.name);
                             const card = `

@@ -15,10 +15,10 @@ const selectedDatabase = (process.env.USE_TEST_DATABASE) ? uri : atlas ;
 
 try {
     mongoose.connect(selectedDatabase).then(console.log("MongoDB is connected."));
-    mongoose.connection.dropCollection("tickets");
-    mongoose.connection.dropCollection("users");
-    mongoose.connection.dropCollection("departments");
-    console.log("MongoDB cleared.");
+    //mongoose.connection.dropCollection("tickets");
+    //mongoose.connection.dropCollection("users");
+    //mongoose.connection.dropCollection("departments");
+    //console.log("MongoDB cleared.");
 } catch (error) {
     console.log("Unable to connect to MongoDB.");
     console.log(error);

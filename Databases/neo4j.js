@@ -19,6 +19,6 @@ const neo4jQuery = async (query) => {
     await driver.close();
 }
 
-neo4jQuery("match (a) detach delete (a)");
+//neo4jQuery("match (a) detach delete (a)");
 
 export default neo4jQuery;
