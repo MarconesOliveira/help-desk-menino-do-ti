@@ -20,6 +20,7 @@ router.get("/ticket", (req, res) => (res.status(200).sendFile(path.join(__dirnam
 //Login routes
 router.post("/login", (req, res) => FrontController.userLogin(req, res));
 router.get("/login", (req, res) => (res.status(200).sendFile(path.join(__dirname + "Views/login.html"))));
+router.post("/verifyToken", validateToken, (req, res) => (res.status(200).json({"msg":"Token still valid."})))
 
 //Routes to get all instances of any entity.
 router.get("/all_tickets", (req, res) => FrontController.getAllTickets(req, res));
