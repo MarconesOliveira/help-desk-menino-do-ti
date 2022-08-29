@@ -107,28 +107,33 @@
             .then(res => {
                 const tickets = res.data.msg;
                 tickets.forEach(ticket => {
-                    const card = `
-                        <span data-bs-toggle="modal" data-bs-target="#TicketModal" id="${ticket.code}" onclick="updateModal(this.id)">
-                            <div class="card my-2 p-2 ${ticket.state}">
-                                <div class="card-body">
-                                    <div class="card-title fw-bolder">
-                                        ${ticket.department}
+                    console.log(`/department/${ticket.code}`);
+                    axios.get(`/department/${ticket.code}`)
+                        .then((data) => {
+                            console.table(data.data.msg.name);
+                            const card = `
+                                <span data-bs-toggle="modal" data-bs-target="#TicketModal" id="${ticket.code}" onclick="updateModal(this.id)">
+                                    <div class="card my-2 p-2 ${ticket.state}">
+                                        <div class="card-body">
+                                            <div class="card-title fw-bolder">
+                                                ${data.data.msg.name}
+                                            </div>
+                                            <div class="card-text">
+                                                ${ticket.description}
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="card-text">
-                                        ${ticket.description}
-                                    </div>
-                                </div>
-                            </div>
-                        </span>`;
-                    if(ticket.state === "Aberto") {
-                        document.querySelector("#tickets_abertos").innerHTML += card;
-                    }
-                    else if(ticket.state === "Manutencao") {
-                        document.querySelector("#tickets_manutencao").innerHTML += card;
-                    }
-                    else if(ticket.state === "Fechado") {
-                        document.querySelector("#tickets_fechados").innerHTML += card;
-                    }
+                                </span>`;
+                            if(ticket.state === "Aberto") {
+                                document.querySelector("#tickets_abertos").innerHTML += card;
+                            }
+                            else if(ticket.state === "Manutencao") {
+                                document.querySelector("#tickets_manutencao").innerHTML += card;
+                            }
+                            else if(ticket.state === "Fechado") {
+                                document.querySelector("#tickets_fechados").innerHTML += card;
+                            }
+                        });
                 });
             }).catch((err) => {
                 console.log(err.response.data.msg);
@@ -248,7 +253,6 @@
                 console.log(err.response.data.msg);
             });
         }
-        //setTimeout(() => (location.reload()), 10000);
     </script>
 </body>
 </html>
