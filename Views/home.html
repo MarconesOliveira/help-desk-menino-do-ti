@@ -200,7 +200,7 @@
                                     response.data.msg.forEach(department => {
                                         console.log(department);
                                         departmentOptions.innerHTML += `
-                                            <option ${(ticket.state === "Aberto") ? "selected" : ""} value="${department.code}">${department.name}</option>
+                                            <option ${(department.code === ticket.department) ? "selected" : ""} value="${department.code}">${department.name}</option>
                                         `;
                                     });
                                 }
