@@ -32,8 +32,8 @@ setInterval(() => {
             console.log(res.status);
         }).catch((err) => {
             console.log(err.response.status);
-            if(err.response.status === "403") {
-                deleteToken("Token expirou");
+            if(err.response.status === 403) {
+                deleteToken("Seu Token Expirou!");
             }
         });
     }
