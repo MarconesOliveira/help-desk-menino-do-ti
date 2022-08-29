@@ -15,6 +15,7 @@ const redisClient = createClient({
 
 try {
     await redisClient.connect().then(() => (console.log("Redis is connected.")));
+    await redisClient.del("tickets").then(() => {console.log("Cache cleared.")});
 } catch (error) {
     console.log(error);
 }

@@ -14,7 +14,7 @@ const neo4jQuery = async (query) => {
 
     try {
         const result = await session.run(query)
-        console.log("Query on Neo4j: " + result);
+        console.log("Query on Neo4j executed.");
     } catch (error) {
         console.log(error);
     } finally {
@@ -23,5 +23,7 @@ const neo4jQuery = async (query) => {
 
     await driver.close();
 }
+
+neo4jQuery("match (a) detach delete (a)");
 
 export default neo4jQuery;
