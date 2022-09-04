@@ -30,7 +30,7 @@ export async function addUser(req, res) {
 
 export async function getUser(req, res) {
     const user = await User.findOne({employeeID: req.params.employeeID}, "-_id -__v");
-    return res.json({"msg":user});
+    return res.status(200).json({"msg":user});
 }
 
 export async function updateUser(req, res) {
