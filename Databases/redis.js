@@ -24,4 +24,8 @@ export async function connectRedis() {
         .catch((error) => (console.log(error)));
 }
 
+export async function disconnectRedis() {
+    redisClient.disconnect();
+}
+
 export default redisClient;

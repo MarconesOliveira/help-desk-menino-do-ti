@@ -26,4 +26,8 @@ export async function connectMongoDB() {
     }
 }
 
+export async function disconnectMongoDB() {
+    mongoose.disconnect();
+}
+
 export default mongoose;
