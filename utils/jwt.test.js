@@ -1,4 +1,3 @@
-import { response } from "express";
 import { createToken, validateToken } from "./jwt";
 
 const expiredToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSm9obiBEb2UiLCJhZ2UiOjI2LCJpYXQiOjE2NjIyNDk4ODQsImV4cCI6MTY2MjI1MDQ4NH0.rdSiyxKiyOVORTbsZkWIngr2pAL7en18bwRV-T9ehB8";
