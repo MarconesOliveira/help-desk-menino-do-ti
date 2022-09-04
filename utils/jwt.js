@@ -20,7 +20,6 @@ export function validateToken(req, res, next) {
     const secret = process.env.JWT_SECRET;
     jsonwebtoken.verify(token, secret, (error, user) => {
         if(error) {
-            console.log(error);
             return res.status(403).json({"msg":"Invalid token."});
         }
         req.user = user;
