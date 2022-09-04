@@ -2,8 +2,6 @@ import { createToken, validateToken } from "./jwt";
 
 const expiredToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSm9obiBEb2UiLCJhZ2UiOjI2LCJpYXQiOjE2NjIyNDk4ODQsImV4cCI6MTY2MjI1MDQ4NH0.rdSiyxKiyOVORTbsZkWIngr2pAL7en18bwRV-T9ehB8";
 const invalidToken = "avwdevwdevwdewdevsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSm9obiBEb2UiLCJhZ2UiOjI2LCJpYXQiOjE2NjIyNDk4ODQsImV4cCI6MTY2MjI1MDQ4NH0.rdSiyxKiyOVORTbsZkWIngr2psvAL7en18bwRV-T9ehB8";
-
-const res = {"status": function(status) {return ({"json": function(msg) { return response = false; }});}};
 const user = {
     "name": "John Doe",
     "age": 26
@@ -45,6 +43,7 @@ describe("JWT functions.", () => {
     test("Verify a valid jwt.", () => {
         const validToken = createToken(user);
         const req = {headers: {authorization: `Bearer ${validToken}`}};
+        const res = {"status": function(status) {return ({"json": function(msg) { }});}};
         let response = false;
         const next = () => { return response = true; };
         validateToken(req, res, next);
