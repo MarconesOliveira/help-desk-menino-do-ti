@@ -13,15 +13,17 @@ const atlas = process.env.ATLAS_URI;
 //If environment variable USE_TEST_DATABASE exists and it's set to true use the Dev database
 const selectedDatabase = (process.env.USE_TEST_DATABASE) ? uri : atlas ;
 
-try {
-    mongoose.connect(selectedDatabase).then(console.log("MongoDB is connected."));
-    //mongoose.connection.dropCollection("tickets");
-    //mongoose.connection.dropCollection("users");
-    //mongoose.connection.dropCollection("departments");
-    //console.log("MongoDB cleared.");
-} catch (error) {
-    console.log("Unable to connect to MongoDB.");
-    console.log(error);
+export async function connectMongoDB() {
+    try {
+        mongoose.connect(selectedDatabase);
+        //mongoose.connection.dropCollection("tickets");
+        //mongoose.connection.dropCollection("users");
+        //mongoose.connection.dropCollection("departments");
+        //console.log("MongoDB cleared.");
+    } catch (error) {
+        console.log("Unable to connect to MongoDB.");
+        console.log(error);
+    }
 }
 
 export default mongoose;
