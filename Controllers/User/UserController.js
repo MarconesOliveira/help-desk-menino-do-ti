@@ -14,7 +14,7 @@ export async function addUser(req, res) {
         req.body.password = hashedPassword;
     } catch (error) {
         console.log(error);
-        return res.json({"msg":"Error saving password."});
+        return res.status(400).json({"msg":"Error saving password."});
     }
     const user = new User(req.body);
     user.save()
