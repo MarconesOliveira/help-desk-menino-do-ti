@@ -3,7 +3,6 @@ import User from "../../Models/User.js";
 import Department from "../../Models/Department.js";
 import redisClient from "../../Databases/redis.js";
 import neo4jQuery from "../../Databases/neo4j.js";
-import mongoose from "mongoose";
 
 export async function getAllTickets(req, res) {
     const ticketsOnCache = await redisClient.get("tickets");
