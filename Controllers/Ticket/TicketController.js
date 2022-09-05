@@ -45,12 +45,10 @@ export async function addTicket(req, res) {
     ticket.save()
         .then(() => {
             redisClient.del("tickets")
-                .then(console.log("Cache reset."))
                 .catch();
             neo4jQuery(`CREATE (a:Ticket {name: "Ticket ${ticket.code}", desc: "${ticket.description}", code: "${ticket.code}"}) RETURN a`)
                 .then(() => neo4jQuery(`match (p:Person {employeeID: "${ticket.requester}"}) match (d:Ticket {code: "${ticket.code}"}) create (p)-[rel:REQUISITOU]->(d)`))
                     .then(() => neo4jQuery(`match (p:Ticket {code: "${ticket.code}"}) match (d:Department {code: "${ticket.department}"}) create (p)-[rel:ORIGEM]->(d)`))
-                    .then(() => console.log("Query finished."));
             return res.status(200).json({"msg":"Ticket Saved on Database."})
         })
         .catch((error) => {
@@ -75,7 +73,6 @@ export async function updateTicket(req, res) {
         ...update
     });
     redisClient.del("tickets")
-        .then(console.log("Cache reset."))
         .catch();
     res.json({"msg":result});
 }
@@ -83,7 +80,6 @@ export async function updateTicket(req, res) {
 export async function deleteTicket(req, res) {
     const result = await Ticket.deleteOne({code: req.params.code});
     redisClient.del("tickets")
-        .then(console.log("Cache reset."))
         .catch();
         neo4jQuery(`match (a:Ticket) where a.code = "${req.params.code}" detach delete (a)`);
     return res.status(200).json({"msg":result});
