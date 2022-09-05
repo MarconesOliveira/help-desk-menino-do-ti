@@ -47,7 +47,6 @@ describe("Department Operations", () => {
         };
         const res = {"status": function(status) { statusCode = status; return ({"json": function(msg) { response = msg; }});}};
         await addDepartment(req, res);
-        console.log(response.msg);
         expect(statusCode).toBe(200);
         expect(response.msg).toBe("Department Saved on Database.");
     });
