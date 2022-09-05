@@ -19,7 +19,7 @@ export async function connectMongoDB(isTest) {
         await mongoose.connection.dropCollection("tickets");
         await mongoose.connection.dropCollection("users");
         await mongoose.connection.dropCollection("departments");
-        return console.log("MongoDB cleared.");
+        return;
     }
     try {
         mongoose.connect(selectedDatabase);

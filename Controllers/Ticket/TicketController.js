@@ -7,7 +7,6 @@ import neo4jQuery from "../../Databases/neo4j.js";
 export async function getAllTickets(req, res) {
     const ticketsOnCache = await redisClient.get("tickets");
     if (ticketsOnCache) {
-        console.log("Cached response.");
         return res.status(200).json({"msg":JSON.parse(ticketsOnCache)});
     }
     const tickets = await Ticket.find({}, "-_id -__v");

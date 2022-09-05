@@ -30,7 +30,6 @@ describe("Ticket Operations", () => {
         const req = { };
         const res = {"status": function(status) { statusCode = status; return ({"json": function(msg) { response = msg; }});}};
         await getAllTickets(req, res);
-        console.log(response.msg);
         expect(statusCode).toBe(200);
         expect(response.msg).toBeTruthy();
     });

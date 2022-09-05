@@ -4,7 +4,7 @@
   "description": "Sistema de help desk",
   "main": "index.js",
   "scripts": {
-    "test": "jest --detectOpenHandles",
+    "test": "jest --coverage --detectOpenHandles",
     "devStart": "nodemon index.js",
     "devAuth": "nodemon authServer.js",
     "start": "node index.js"
