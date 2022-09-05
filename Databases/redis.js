@@ -16,16 +16,15 @@ const redisClient = createClient({
 export async function connectRedis() {
     redisClient.connect()
         .then(() => {
-            console.log("Redis is connected.");
             redisClient.del("tickets")
-                .then(() => {console.log("Cache cleared.")})
+                .then(() => {})
                 .catch((error) => (console.log(error)));
         })
         .catch((error) => (console.log(error)));
 }
 
 export async function disconnectRedis() {
-    redisClient.disconnect();
+    await redisClient.disconnect();
 }
 
 export default redisClient;
