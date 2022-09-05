@@ -43,6 +43,7 @@
     "babel-jest": "^29.0.0",
     "jest": "^29.0.0",
     "nodemon": "^2.0.19",
+    "puppeteer": "^17.0.0",
     "supertest": "^6.2.4"
   }
 }
