@@ -7,7 +7,7 @@ export async function getAllDepartments(req, res) {
     return res.status(200).json({"msg":departments});
 }
 
-const supervisorExistInDatabase = async(providedEmployeeID) => {
+export async function supervisorExistInDatabase(providedEmployeeID) {
     const supervisor = await User.find({ employeeID: providedEmployeeID });
     if(supervisor.length === 0) {
         return false;
@@ -26,7 +26,6 @@ export async function addDepartment(req, res) {
         .then(() => {
             neo4jQuery(`CREATE (a:Department {name: "${department.name}", code: "${department.code}"})`)
                 .then(() => neo4jQuery(`match (p:Person {employeeID: "${department.supervisor}"}) match (d:Department {code: "${department.code}"}) create (p)-[rel:SUPERVISIONA]->(d)`))
-                .then(() => console.log("Finished neo4j query."));
             return res.status(200).json({"msg":"Department Saved on Database."});
         })
         .catch((error) => {
